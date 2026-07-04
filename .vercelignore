@@ -6,6 +6,7 @@ gen-images.mjs
 gen-order-photos.mjs
 gen-all-photos.mjs
 regen-fixes.mjs
+regen-fixes2.mjs
 *.py
 _source/
 _review/
