@@ -1,0 +1,11 @@
+# Local-dev / tooling only — must NOT be deployed as Vercel functions.
+# Their presence makes Vercel run a server instead of serving static files.
+server.mjs
+mirror.sh
+gen-images.mjs
+gen-order-photos.mjs
+gen-all-photos.mjs
+regen-fixes.mjs
+*.py
+_source/
+_review/
