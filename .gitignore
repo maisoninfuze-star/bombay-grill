@@ -1,0 +1,10 @@
+# Raw photoshoot originals & backups (kept locally, ~240MB — site uses assets/photos/)
+_source/
+
+# Audit / working artifacts
+_review/
+
+# OS / editor
+.DS_Store
+*.log
+node_modules/

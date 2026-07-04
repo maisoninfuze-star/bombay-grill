@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Online — Bombay Grill &amp; Sweets | Pierrefonds</title>
+<meta name="description" content="Order Bombay Grill & Sweets for pickup in Pierrefonds — tandoor grill, curries, biryani, breads & sweets. Delivery coming soon.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div id="loader">
+  <div class="l-inner">
+    <div class="l-mark"><span>Order Online</span></div>
+    <div class="l-sub"><span>Pickup · Pierrefonds</span></div>
+  </div>
+  <div class="l-count">0</div><div class="l-bar"></div>
+</div>
+
+<header class="site-head">
+  <a href="index.html" class="logo">Bombay Grill<small>&amp; Sweets · Pierrefonds</small></a>
+  <nav class="nav">
+    <a href="index.html" data-i18n="nav_home">Home</a>
+    <a href="menu.html" data-i18n="nav_menu">Menu</a>
+    <a href="order.html" class="active" data-i18n="nav_order">Order</a>
+    <a href="catering.html" data-i18n="nav_catering">Catering</a>
+    <a href="tel:+15144213522" class="nav-cta">514 421 3522</a>
+    <div class="lang-switch"><button data-lang="en"><span>EN</span></button><button data-lang="fr"><span>FR</span></button></div>
+  </nav>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="drawer">
+  <button class="close" aria-label="Close">&times;</button>
+  <a href="index.html" data-i18n="nav_home">Home</a><a href="menu.html" data-i18n="nav_menu">Menu</a><a href="order.html" data-i18n="nav_order">Order</a><a href="catering.html" data-i18n="nav_catering">Catering</a><a href="tel:+15144213522" data-i18n="call_us">Call us</a>
+  <div class="lang-switch" style="margin-top:1.4rem;align-self:flex-start"><button data-lang="en"><span>EN</span></button><button data-lang="fr"><span>FR</span></button></div>
+</div>
+
+<!-- hero -->
+<section class="page-hero wrap" style="padding-bottom:clamp(28px,4vh,50px)">
+  <span class="eyebrow" data-hero data-i18n="o_eyebrow" style="justify-content:center">Order online</span>
+  <h1 class="display" data-hero data-i18n-html="o_title">Order for <span class="serif-accent italic">pickup</span></h1>
+  <p class="lead" data-hero data-i18n="o_lead" style="margin:1.1rem auto 0">Freshly made to order. Ready at 4771 Sources Blvd, Pierrefonds — usually in 15–25 min.</p>
+</section>
+
+<main class="wrap" style="padding-bottom:clamp(80px,12vh,160px)">
+  <!-- order type -->
+  <div class="order-top">
+    <div class="seg" role="tablist" aria-label="Order type">
+      <button class="active" role="tab">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v13L3 16zM3 11v5"/><path d="M8 9.5V18"/></svg>
+        <span data-i18n="o_pickup">Pickup</span>
+      </button>
+      <button role="tab" disabled title="Delivery via Snappy — coming soon">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span data-i18n="o_delivery">Delivery</span> <span class="soon">Soon</span>
+      </button>
+    </div>
+    <p style="font-size:.82rem;color:var(--muted)" data-i18n-html="o_snappy">🛈 Delivery via <b style="color:var(--gold-soft)">Snappy</b> arrives soon. Pickup available now.</p>
+  </div>
+
+  <!-- mobile category pills -->
+  <div class="cat-pills"><div class="cat-pills__track" id="cat-pills-track"></div></div>
+
+  <!-- shell: rail + items -->
+  <div class="order-shell">
+    <nav class="cat-rail" id="cat-rail" aria-label="Menu categories"></nav>
+    <div id="menu-root"></div>
+  </div>
+</main>
+
+<!-- floating cart -->
+<button class="cart-fab" id="cart-fab" aria-label="Open bag">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+  <span>View bag</span><span class="ct" id="fab-count">0</span>
+</button>
+
+<!-- cart drawer -->
+<div class="cart-scrim" id="cart-scrim"></div>
+<aside class="cart" id="cart" aria-label="Your order">
+  <div class="cart__head"><h3 data-i18n="o_bag">Your bag</h3><button class="cart__close" id="cart-close" aria-label="Close">&times;</button></div>
+  <div class="cart__items" id="cart-items"></div>
+  <div class="cart__foot" id="cart-foot" style="display:none">
+    <div class="cart__line"><span data-i18n="o_subtotal">Subtotal</span><span id="sum-sub">$0.00</span></div>
+    <div class="cart__line"><span data-i18n="o_taxes">Taxes (GST+QST)</span><span id="sum-tax">$0.00</span></div>
+    <div class="cart__total"><span data-i18n="o_total">Total</span><b id="sum-total">$0.00</b></div>
+    <button class="btn btn--solid cart__cta" id="checkout-btn"><span data-i18n="o_place">Place pickup order</span> <span class="arr">→</span></button>
+    <p class="cart__note" data-i18n="o_note">Sends your order by text to the restaurant to confirm. Online payment &amp; Snappy delivery coming soon.</p>
+  </div>
+</aside>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div class="col"><h2 class="display"><span class="serif-accent italic">Pick up</span><br>in Pierrefonds</h2>
+        <a href="https://maps.google.com/?q=4771+Sources+Blvd+Pierrefonds+QC" target="_blank" rel="noopener" style="margin-top:1.2rem">4771 Sources Blvd<br>Pierrefonds, QC H8Y 3C6</a></div>
+      <div class="col"><h4>Order help</h4><a href="tel:+15144213522">+1 (514) 421-3522</a><a href="menu.html">Full menu</a><a href="catering.html">Catering</a></div>
+      <div class="col"><h4>Hours</h4><p>Mon–Thu · 11:30–22:00</p><p>Fri–Sat · 11:30–23:00</p><p>Sun · 12:00–22:00</p></div>
+    </div>
+    <div class="foot__bar"><span>© 2026 Bombay Grill &amp; Sweets</span><span>Pickup now ✦ Delivery via Snappy soon</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/menu-data.js"></script>
+<script src="assets/js/photo-manifest.js"></script>
+<script src="assets/js/order.js"></script>
+</body>
+</html>
