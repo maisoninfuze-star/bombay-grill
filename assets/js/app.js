@@ -6,9 +6,12 @@
    ============================================================ */
 gsap.registerPlugin(ScrollTrigger);
 
-/* ---------- Lenis smooth scroll ---------- */
+/* ---------- Lenis smooth scroll (desktop only — native scroll on touch) ---------- */
 let lenis;
 function initLenis(){
+  // Phones/tablets use native touch scrolling; Lenis can block it, so skip on touch/small screens.
+  const isTouch = matchMedia('(hover: none), (pointer: coarse), (max-width: 900px)').matches;
+  if(isTouch) return;
   lenis = new Lenis({ duration:1.15, easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)), smoothWheel:true });
   window.lenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
@@ -48,7 +51,9 @@ function intro(){
 
   const strokes = buildStrokes(loader);
   const counter = { v:0 };
-  const tl = gsap.timeline({ onComplete:()=>{ document.body.classList.remove('is-loading'); if(lenis) lenis.start(); start(); }});
+  // safety: never leave the page scroll-locked if the intro is interrupted (e.g. backgrounded tab on mobile)
+  const failsafe = setTimeout(()=>{ document.body.classList.remove('is-loading'); loader.style.display='none'; if(lenis) lenis.start(); }, 7000);
+  const tl = gsap.timeline({ onComplete:()=>{ clearTimeout(failsafe); document.body.classList.remove('is-loading'); if(lenis) lenis.start(); start(); }});
 
   // 1. strokes draw on from the centre out
   tl.to(strokes, { strokeDashoffset:0, duration:.9, ease:'power2.out', stagger:{each:.012, from:'start'} }, .15)
