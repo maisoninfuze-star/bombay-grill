@@ -51,9 +51,15 @@ function intro(){
 
   const strokes = buildStrokes(loader);
   const counter = { v:0 };
-  // safety: never leave the page scroll-locked if the intro is interrupted (e.g. backgrounded tab on mobile)
-  const failsafe = setTimeout(()=>{ document.body.classList.remove('is-loading'); loader.style.display='none'; if(lenis) lenis.start(); }, 7000);
-  const tl = gsap.timeline({ onComplete:()=>{ clearTimeout(failsafe); document.body.classList.remove('is-loading'); if(lenis) lenis.start(); start(); }});
+  gsap.set('[data-hero]', { opacity:0, y:60 }); // hidden behind the loader until reveal
+  // reveal the hero content; clearProps guarantees it ends fully visible even if interrupted
+  const revealHero = ()=>{
+    gsap.fromTo('[data-hero]', { y:60, opacity:0 }, { y:0, opacity:1, duration:1.0, ease:'expo.out', stagger:.08, clearProps:'opacity,transform', overwrite:true });
+    gsap.fromTo('.hp-panel img, .hero__media img', { scale:1.15 }, { scale:1, duration:1.4, ease:'expo.out', overwrite:true });
+  };
+  // safety: never leave the page scroll-locked OR the hero hidden if the intro is interrupted (e.g. backgrounded mobile tab)
+  const failsafe = setTimeout(()=>{ document.body.classList.remove('is-loading'); loader.style.display='none'; if(lenis) lenis.start(); gsap.set('[data-hero]',{opacity:1,y:0,clearProps:'opacity,transform'}); }, 6000);
+  const tl = gsap.timeline({ onComplete:()=>{ clearTimeout(failsafe); document.body.classList.remove('is-loading'); if(lenis) lenis.start(); revealHero(); start(); }});
 
   // 1. strokes draw on from the centre out
   tl.to(strokes, { strokeDashoffset:0, duration:.9, ease:'power2.out', stagger:{each:.012, from:'start'} }, .15)
@@ -66,10 +72,6 @@ function intro(){
     .to(loader.querySelectorAll('.l-mark span, .l-sub span'), { y:'-110%', duration:.7, ease:'expo.in', stagger:.04 }, '+=.35')
     .to(loader, { yPercent:-100, duration:1.0, ease:'expo.inOut' }, '-=.15')
     .set(loader, { display:'none' });
-
-  // hero rises in parallel with the curtain
-  tl.from('[data-hero]', { y:60, opacity:0, duration:1.1, ease:'expo.out', stagger:.08 }, '-=.7')
-    .from('.hp-panel img, .hero__media img', { scale:1.3, duration:1.6, ease:'expo.out' }, '<');
 }
 
 /* ---------- Scroll-triggered reveals ---------- */
