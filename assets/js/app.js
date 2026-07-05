@@ -45,7 +45,16 @@ function buildStrokes(loader){
 /* ---------- Preloader intro ---------- */
 function intro(){
   const loader = document.getElementById('loader');
-  if(!loader){ start(); revealTransition(); return; }
+  // On phones/tablets: skip the animated intro entirely. No scroll lock, no
+  // GSAP hero-reveal that could freeze — content shows instantly, always scrollable.
+  const isTouch = matchMedia('(hover: none), (pointer: coarse), (max-width: 900px)').matches;
+  if(!loader || isTouch){
+    if(loader) loader.style.display='none';
+    document.body.classList.remove('is-loading');
+    gsap.set('[data-hero]', { opacity:1, y:0, clearProps:'opacity,transform' });
+    start();
+    return;
+  }
   document.body.classList.add('is-loading');
   if(lenis) lenis.stop();
 
