@@ -33,14 +33,14 @@ html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 .lenis.lenis-stopped{overflow:hidden}
 
-html{overflow-x:clip}
+/* NOTE: no overflow-x on html/body — on iOS Safari that breaks vertical touch
+   scrolling. Horizontal overflow is clipped by individual sections instead. */
 body{
   font-family:var(--font-body);
   background:var(--bg);
   color:var(--cream);
   font-weight:300;
   line-height:1.65;
-  overflow-x:clip; /* clip (not hidden) so body stays out of the scroll chain on iOS */
 }
 body.is-loading{overflow:hidden;height:100vh}
 
@@ -136,8 +136,11 @@ section{position:relative}
   position:fixed;top:0;left:0;right:0;z-index:90;
   display:flex;align-items:center;justify-content:space-between;
   padding:clamp(18px,2.4vw,30px) var(--gut);
-  mix-blend-mode:difference;color:#fff;
+  color:#fff; /* NOTE: mix-blend-mode removed — it locks native touch scroll on iOS Safari */
 }
+/* subtle scrim so white header text stays legible over the hero image (replaces the blend mode) */
+.site-head::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(10,7,5,.45),rgba(10,7,5,0))}
 .site-head .logo{font-family:var(--font-display);font-weight:600;font-size:1.45rem;letter-spacing:.02em}
 .site-head .logo small{display:block;font-family:var(--font-body);font-size:.55rem;letter-spacing:.42em;text-transform:uppercase;opacity:.8;margin-top:-2px}
 .nav{display:flex;gap:2.4rem;align-items:center}
@@ -147,8 +150,7 @@ section{position:relative}
 .nav-cta{padding:.7em 1.4em;border:1px solid rgba(255,255,255,.35);border-radius:100px}
 .lang-switch{display:inline-flex;align-items:center;border:1px solid currentColor;border-radius:100px;overflow:hidden;opacity:.85}
 .lang-switch button{padding:.35em .7em;background:none;border:0;color:currentColor;font-size:.68rem;letter-spacing:.12em;font-weight:500;cursor:pointer;font-family:var(--font-body);line-height:1}
-.lang-switch button.active{background:currentColor;color:var(--bg)}
-.lang-switch button.active span{mix-blend-mode:difference}
+.lang-switch button.active{background:var(--cream);color:var(--bg)}
 .lang-switch--m{display:none}
 @media (max-width:980px){ .lang-switch--m{display:inline-flex;margin-right:14px} }
 .burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}

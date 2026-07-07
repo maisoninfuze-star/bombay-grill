@@ -6,12 +6,15 @@
    ============================================================ */
 gsap.registerPlugin(ScrollTrigger);
 
+/* Any touch-capable device (incl. iPad & landscape iPhone that exceed 900px) uses
+   native scroll and NO GSAP pinning — pins/Lenis lock touch scroll on iOS Safari. */
+const IS_TOUCH = ('ontouchstart' in window) || navigator.maxTouchPoints > 0 ||
+  matchMedia('(hover: none), (pointer: coarse), (max-width: 900px)').matches;
+
 /* ---------- Lenis smooth scroll (desktop only — native scroll on touch) ---------- */
 let lenis;
 function initLenis(){
-  // Phones/tablets use native touch scrolling; Lenis can block it, so skip on touch/small screens.
-  const isTouch = matchMedia('(hover: none), (pointer: coarse), (max-width: 900px)').matches;
-  if(isTouch) return;
+  if(IS_TOUCH) return;
   lenis = new Lenis({ duration:1.15, easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)), smoothWheel:true });
   window.lenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
@@ -47,8 +50,7 @@ function intro(){
   const loader = document.getElementById('loader');
   // On phones/tablets: skip the animated intro entirely. No scroll lock, no
   // GSAP hero-reveal that could freeze — content shows instantly, always scrollable.
-  const isTouch = matchMedia('(hover: none), (pointer: coarse), (max-width: 900px)').matches;
-  if(!loader || isTouch){
+  if(!loader || IS_TOUCH){
     if(loader) loader.style.display='none';
     document.body.classList.remove('is-loading');
     gsap.set('[data-hero]', { opacity:1, y:0, clearProps:'opacity,transform' });
@@ -122,11 +124,12 @@ function start(){
 
 /* ---------- Pinned horizontal HERO (sen-knife style) ---------- */
 function pinnedHero(){
+  if(IS_TOUCH) return; // never pin on touch devices — it hijacks vertical scroll on iOS
   const sec=document.querySelector('[data-hero-pin]');
   if(!sec) return;
   const track=sec.querySelector('.hero-pin__track');
   const head=sec.querySelector('.hp-head');
-  ScrollTrigger.matchMedia({ '(min-width:768px)': ()=>{
+  ScrollTrigger.matchMedia({ '(min-width:901px) and (pointer:fine)': ()=>{
     const dist=()=> Math.max(0, track.scrollWidth - window.innerWidth);
     // pin the hero & pan the photographic track horizontally as you scroll
     const st=gsap.to(track,{ x:()=>-dist(), ease:'none',
@@ -180,6 +183,7 @@ function marquee(){
 
 /* ---------- Pinned horizontal dishes ---------- */
 function pinnedDishes(){
+  if(IS_TOUCH) return; // never pin on touch devices
   const sec=document.querySelector('[data-pin-scroll]');
   if(!sec) return;
   const track=sec.querySelector('.dishes__track');
@@ -190,8 +194,8 @@ function pinnedDishes(){
     gsap.to(track,{ x:-dist, ease:'none',
       scrollTrigger:{ trigger:sec, start:'top top', end:()=>'+='+dist, scrub:1, pin:true, invalidateOnRefresh:true }});
   };
-  // only pin on wider screens
-  ScrollTrigger.matchMedia({ '(min-width:981px)': setup });
+  // only pin on wider non-touch screens
+  ScrollTrigger.matchMedia({ '(min-width:981px) and (pointer:fine)': setup });
 }
 
 /* ---------- Page transition panel ---------- */
