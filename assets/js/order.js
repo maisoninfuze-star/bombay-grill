@@ -91,7 +91,7 @@
             </div>
             <div class="item-card__body">
               <h3>${primary(it)}</h3><span class="fr">${secondary(it)}</span>
-              ${it.d?`<p class="d">${it.d}</p>`:''}
+              ${(LANG==='fr'&&it.df)?`<p class="d">${it.df}</p>`:(it.d?`<p class="d">${it.d}</p>`:'')}
               <div class="item-card__foot">
                 <span class="item-card__price">${money(it.p)}</span>
                 <div class="ctrl" data-ctrl="${key}"></div>
@@ -173,12 +173,19 @@
   });
 
   // ---- category nav: click + scrollspy ----
+  function stickyOffset(){
+    const head=document.querySelector('.site-head');
+    const pills=document.querySelector('.cat-pills');
+    const ph=(pills && getComputedStyle(pills).display!=='none') ? pills.offsetHeight : 0;
+    return (head?head.offsetHeight:60) + ph + 16;
+  }
   function goto(id){
     const el=$('#cat-'+id); if(!el) return;
-    if(window.lenis){ window.lenis.scrollTo(el,{offset:-90}); return; }
+    const off=stickyOffset();
+    if(window.lenis){ window.lenis.scrollTo(el,{offset:-off}); return; }
     // Instant positional scroll — the only form that reliably moves the page on
     // mobile Safari ({behavior:'smooth'} and rAF are flaky there).
-    const target = Math.max(0, el.getBoundingClientRect().top + (window.scrollY||window.pageYOffset||0) - 84);
+    const target = Math.max(0, el.getBoundingClientRect().top + (window.scrollY||window.pageYOffset||0) - off);
     window.scrollTo(0, target);
   }
   rail.addEventListener('click',e=>{const b=e.target.closest('[data-cat]'); if(b) goto(b.dataset.cat);});
@@ -201,11 +208,13 @@
 
   // ---- checkout (pickup) ----
   $('#checkout-btn').addEventListener('click',()=>{
+    if(!cart.length) return;
     const sub=subtotal(), tax=sub*TAX;
-    const lines=cart.map(i=>`${i.qty}× ${i.name} — ${money(i.qty*i.price)}`).join('%0a');
-    const msg=`Bombay Grill — PICKUP order%0a%0a${lines}%0a%0aSubtotal ${money(sub)}%0aTax ${money(tax)}%0aTotal ${money(sub+tax)}`;
-    // No backend yet: open SMS to the restaurant with the order pre-filled (works on mobile),
-    // and show a confirmation note. Real online payment + Snappy delivery wired later.
-    window.location.href=`sms:+15144213522?&body=${msg}`;
+    const lines=cart.map(i=>`${i.qty} x ${i.name} - ${money(i.qty*i.price)}`).join('\n');
+    const msg=`Bombay Grill - PICKUP order\n\n${lines}\n\nSubtotal ${money(sub)}\nTax ${money(tax)}\nTotal ${money(sub+tax)}`;
+    // No backend yet: open the SMS app to the restaurant with the order pre-filled.
+    // iOS uses '&body=', Android uses '?body='; body must be URL-encoded.
+    const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+    window.location.href = `sms:+15144213522${isIOS?'&':'?'}body=${encodeURIComponent(msg)}`;
   });
 })();

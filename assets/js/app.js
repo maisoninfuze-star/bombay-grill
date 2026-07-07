@@ -232,9 +232,12 @@ function nav(){
   // internal page nav → cover transition (sen-knife Highway feel)
   document.querySelectorAll('a[href$=".html"]').forEach(a=>{
     const href=a.getAttribute('href');
-    // skip current page links that are just the active one
     a.addEventListener('click',e=>{
-      if(a.target==='_blank'||e.metaKey||e.ctrlKey) return;
+      // let the browser handle new-tab/window/download gestures
+      if(a.target==='_blank'||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0) return;
+      // skip links to the page we're already on (logo / active nav item)
+      let dest; try{ dest=new URL(href, location.href); }catch(_){ return; }
+      if(dest.pathname===location.pathname){ e.preventDefault(); return; }
       e.preventDefault(); coverAndGo(href);
     });
   });
@@ -247,3 +250,11 @@ window.addEventListener('DOMContentLoaded',()=>{
   intro();
 });
 window.addEventListener('load',()=>ScrollTrigger.refresh());
+// When restored from bfcache (browser Back), the cover panel can still be down — reset it & unlock scroll.
+window.addEventListener('pageshow',e=>{
+  if(transEl) gsap.set(transEl,{transform:'translateY(100%)'});
+  const b=transEl&&transEl.querySelector('b'); if(b) gsap.set(b,{opacity:0});
+  document.body.classList.remove('is-loading');
+  const l=document.getElementById('loader'); if(l&&e.persisted) l.style.display='none';
+  if(lenis) lenis.start();
+});

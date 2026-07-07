@@ -80,6 +80,51 @@
     c_form_eyebrow:{en:"Request a quote",fr:"Demander une soumission"},
     c_form_title:{en:"Let's plan<br>your <span class=\"serif-accent italic\">event</span>",fr:"Planifions<br>votre <span class=\"serif-accent italic\">événement</span>"},
     c_send:{en:"Send enquiry",fr:"Envoyer la demande"},
+    // packages
+    c_enquire:{en:"Enquire",fr:"Demander"},
+    c_pk1_tier:{en:"Essentials",fr:"L'essentiel"}, c_pk1_name:{en:"Get-Together",fr:"Réunion"},
+    c_pk1_price:{en:'from <b>$16</b> / guest',fr:"à partir de <b>16 $</b> / invité"},
+    c_pk1_b1:{en:"Choice of 2 curries (veg / non-veg)",fr:"Choix de 2 currys (végé / non-végé)"},
+    c_pk1_b2:{en:"Biryani or jeera rice",fr:"Biryani ou riz jeera"},
+    c_pk1_b3:{en:"Naan & tandoori roti",fr:"Naan & roti tandoori"},
+    c_pk1_b4:{en:"Raita, salad & papad",fr:"Raita, salade & papad"},
+    c_pk1_b5:{en:"One sweet — gulab jamun",fr:"Un dessert — gulab jamun"},
+    c_pk2_tier:{en:"Most popular",fr:"Le plus populaire"}, c_pk2_name:{en:"Celebration",fr:"Célébration"},
+    c_pk2_price:{en:'from <b>$26</b> / guest',fr:"à partir de <b>26 $</b> / invité"},
+    c_pk2_b1:{en:"4 mains incl. butter chicken & lamb",fr:"4 plats principaux dont poulet au beurre & agneau"},
+    c_pk2_b2:{en:"Hyderabadi biryani",fr:"Biryani hyderabadi"},
+    c_pk2_b3:{en:"Assorted tandoor breads",fr:"Pains tandoor assortis"},
+    c_pk2_b4:{en:"Starters: tikka & seekh kebab",fr:"Entrées : tikka & seekh kebab"},
+    c_pk2_b5:{en:"2 sweets + masala chai",fr:"2 desserts + chai masala"},
+    c_pk2_b6:{en:"Chafing dishes & setup included",fr:"Réchauds & installation inclus"},
+    c_pk3_tier:{en:"Premium",fr:"Premium"}, c_pk3_name:{en:"Wedding & Banquet",fr:"Mariage & Banquet"},
+    c_pk3_price:{en:'custom <b>quote</b>',fr:"<b>soumission</b> sur mesure"},
+    c_pk3_b1:{en:"Full multi-course menu, your choice",fr:"Menu complet multi-services, à votre choix"},
+    c_pk3_b2:{en:"Live tandoor & chaat counters",fr:"Comptoirs tandoor & chaat sur place"},
+    c_pk3_b3:{en:"Mithai & dessert table",fr:"Table de mithai & desserts"},
+    c_pk3_b4:{en:"Servers, setup & cleanup",fr:"Serveurs, installation & nettoyage"},
+    c_pk3_b5:{en:"Tastings before the big day",fr:"Dégustations avant le grand jour"},
+    c_pk_note:{en:"Sample packages for layout — final menus & pricing confirmed on enquiry.",fr:"Forfaits à titre indicatif — menus & prix finaux confirmés sur demande."},
+    // process steps
+    c_st1:{en:"Tell us",fr:"Dites-nous"}, c_st1d:{en:"Share your date, guest count and any dietary needs.",fr:"Partagez votre date, le nombre d'invités et les besoins alimentaires."},
+    c_st2:{en:"We plan",fr:"On planifie"}, c_st2d:{en:"We build a menu & quote tailored to your event.",fr:"On crée un menu & une soumission adaptés à votre événement."},
+    c_st3:{en:"You taste",fr:"Vous dégustez"}, c_st3d:{en:"Optional tasting to lock in the final spread.",fr:"Dégustation facultative pour confirmer le festin final."},
+    c_st4:{en:"We deliver",fr:"On livre"}, c_st4d:{en:"Cooked fresh, delivered warm, set up & ready to serve.",fr:"Cuisiné frais, livré chaud, installé & prêt à servir."},
+    // sweet band
+    c_sw_eyebrow:{en:"Sweet tables",fr:"Tables de desserts"},
+    c_sw_title:{en:"Mithai for every<br><span class=\"serif-accent italic\">occasion</span>",fr:"Du mithai pour chaque<br><span class=\"serif-accent italic\">occasion</span>"},
+    c_sw_lead:{en:"Festival boxes, wedding sweet tables and custom gift trays — freshly made and elegantly packed.",fr:"Boîtes de fête, tables de desserts de mariage et plateaux-cadeaux sur mesure — frais et élégamment emballés."},
+    // form
+    c_form_lead:{en:"Send a few details and we'll get back within 24 hours. Prefer to talk? Call <a href=\"tel:+15144213522\" style=\"color:var(--gold-soft)\">514 421 3522</a>.",fr:"Envoyez quelques détails et nous vous répondrons sous 24 h. Vous préférez parler ? Appelez le <a href=\"tel:+15144213522\" style=\"color:var(--gold-soft)\">514 421 3522</a>."},
+    c_l_name:{en:"Name",fr:"Nom"}, c_l_phone:{en:"Phone",fr:"Téléphone"}, c_l_email:{en:"Email",fr:"Courriel"},
+    c_l_date:{en:"Event date",fr:"Date de l'événement"}, c_l_guests:{en:"Guests",fr:"Invités"}, c_l_pkg:{en:"Package",fr:"Forfait"},
+    c_l_msg:{en:"Tell us about your event",fr:"Parlez-nous de votre événement"},
+    c_ph_name:{en:"Your name",fr:"Votre nom"}, c_ph_email:{en:"you@email.com",fr:"vous@courriel.com"},
+    c_ph_guests:{en:"e.g. 50",fr:"ex. 50"}, c_ph_msg:{en:"Type of event, dietary needs, location…",fr:"Type d'événement, besoins alimentaires, lieu…"},
+    c_opt_notsure:{en:"Not sure yet",fr:"Pas encore sûr"},
+    // footer
+    c_foot_title:{en:"<span class=\"serif-accent italic\">Let's</span> talk<br>catering",fr:"<span class=\"serif-accent italic\">Parlons</span><br>traiteur"},
+    c_foot_bar:{en:"Catering across the West Island ✦ Halal",fr:"Traiteur dans l'Ouest-de-l'Île ✦ Halal"},
   };
 
   const KEY='bg_lang';
@@ -88,6 +133,7 @@
     document.documentElement.lang=l;
     document.querySelectorAll('[data-i18n]').forEach(el=>{const d=DICT[el.getAttribute('data-i18n')]; if(d&&d[l]!=null) el.textContent=d[l];});
     document.querySelectorAll('[data-i18n-html]').forEach(el=>{const d=DICT[el.getAttribute('data-i18n-html')]; if(d&&d[l]!=null) el.innerHTML=d[l];});
+    document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const d=DICT[el.getAttribute('data-i18n-ph')]; if(d&&d[l]!=null) el.setAttribute('placeholder',d[l]);});
     document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('active', b.dataset.lang===l));
     window.BG_LANG=l;
     window.dispatchEvent(new CustomEvent('bg:lang',{detail:l}));

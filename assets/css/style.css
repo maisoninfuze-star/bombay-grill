@@ -503,6 +503,13 @@ section{position:relative}
   .summary{position:static}
 }
 
+/* larger touch targets on phones (min ~44px) */
+@media (pointer:coarse){
+  .cat-pill{padding:.8em 1.1em}
+  .qty button{width:44px;height:44px}
+  .lang-switch button{padding:.6em .95em}
+}
+
 /* mobile nav drawer */
 .drawer{position:fixed;inset:0;z-index:95;background:var(--bg);transform:translateY(-100%);transition:transform .7s var(--ease);
   display:flex;flex-direction:column;justify-content:center;padding:var(--gut);gap:1.2rem;

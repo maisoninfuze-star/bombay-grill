@@ -167,9 +167,9 @@ const MENU_CATEGORIES = [
    {n:"Soya Chaap Chilli", f:"Soya Chaap Chilli", p:13.99, v:1},
  ]},
  { id:"bbq", n:"BBQ & Platters", f:"Sizzlers BBQ & Plateaux", items:[
-   {n:"Chicken Platter", f:"Plateau de Poulet", p:28.99, v:0, img:"kebab-platter", d:"Rice, vegetables, chicken kabab, malai boti, chicken boti, green boti"},
-   {n:"Mini Platter", f:"Mini Plateau", p:39.99, v:0, img:"mini-platter", d:"Rice, veg, chicken & beef kabab, malai boti, green boti, beef bihari boti"},
-   {n:"Family Platter", f:"Plateau Familial", p:64.99, v:0, d:"Rice, veg, chicken/beef kabab, bihari kababs, lamb chop & more"},
+   {n:"Chicken Platter", f:"Plateau de Poulet", p:28.99, v:0, img:"kebab-platter", d:"Rice, vegetables, chicken kabab, malai boti, chicken boti, green boti", df:"Riz, légumes, kabab de poulet, malai boti, poulet boti, boti vert"},
+   {n:"Mini Platter", f:"Mini Plateau", p:39.99, v:0, img:"mini-platter", d:"Rice, veg, chicken & beef kabab, malai boti, green boti, beef bihari boti", df:"Riz, légumes, kabab poulet & bœuf, malai boti, boti vert, bœuf bihari boti"},
+   {n:"Family Platter", f:"Plateau Familial", p:64.99, v:0, d:"Rice, veg, chicken/beef kabab, bihari kababs, lamb chop & more", df:"Riz, légumes, kabab poulet/bœuf, kababs bihari, côtelette d'agneau & plus"},
    {n:"Full Chicken Karahi (1kg)", f:"Karahi Poulet Complet", p:28.99, v:0, img:"chicken-karahi"},
    {n:"Shenwari Chicken Karahi (1kg)", f:"Karahi Shenwari Poulet", p:28.99, v:0},
    {n:"Lahori Butt Chicken Karahi (1kg)", f:"Karahi Lahori Butt", p:39.99, v:0},
@@ -178,7 +178,7 @@ const MENU_CATEGORIES = [
    {n:"Boneless Lamb Karahi (1kg)", f:"Karahi d'Agneau Désossé", p:52.99, v:0},
  ]},
  { id:"combos", n:"Meal Combos", f:"Repas Combos", items:[
-   {n:"Classic Combo", f:"Combo Classique", p:24.99, v:0, d:"Lentil soup, veg pakora, tandoori chicken, mutton balti, chili chicken — rice, naan, raita, dessert"},
+   {n:"Classic Combo", f:"Combo Classique", p:24.99, v:0, d:"Lentil soup, veg pakora, tandoori chicken, mutton balti, chili chicken — rice, naan, raita, dessert", df:"Soupe de lentilles, pakora végé, poulet tandoori, mouton balti, poulet chili — riz, naan, raita, dessert"},
    {n:"Fish & Shrimp Combo", f:"Combo Poisson & Crevettes", p:26.99, v:0},
    {n:"Lamb & Yogurt Combo", f:"Combo Agneau & Yaourt", p:22.99, v:0},
    {n:"Tandoori & Curry Combo", f:"Combo Tandoori & Curry", p:26.99, v:0},
