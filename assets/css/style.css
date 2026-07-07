@@ -226,6 +226,15 @@ section{position:relative}
 .dishes{background:var(--bg-2);overflow:hidden}
 .dishes__head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;margin-bottom:clamp(30px,5vh,70px)}
 .dishes__track{display:flex;gap:clamp(20px,2.4vw,40px);will-change:transform}
+/* touch / small screens: the pinned pan is disabled, so make the track a native
+   horizontal swipe carousel instead of clipping the extra cards. */
+@media (hover:none),(pointer:coarse),(max-width:980px){
+  .dishes{overflow:visible}
+  .dishes__track{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;padding-bottom:1rem;scrollbar-width:none;will-change:auto}
+  .dishes__track::-webkit-scrollbar{display:none}
+  .dish-card{scroll-snap-align:start}
+}
 .dish-card{
   flex:0 0 clamp(280px,32vw,440px);position:relative;border-radius:6px;overflow:hidden;
   background:var(--bg-3);border:1px solid var(--line-soft);

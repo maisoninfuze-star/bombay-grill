@@ -65,6 +65,7 @@
 
   // ---- build menu (re-callable on language change) ----
   const root = $('#menu-root'), rail = $('#cat-rail'), pills = $('#cat-pills-track');
+  let io; // scrollspy observer — declared before buildMenu() runs (avoids TDZ error)
   function buildMenu(){
     root.innerHTML=''; rail.innerHTML=''; pills.innerHTML='';
     MENU_CATEGORIES.forEach(cat=>{
@@ -174,12 +175,15 @@
   // ---- category nav: click + scrollspy ----
   function goto(id){
     const el=$('#cat-'+id); if(!el) return;
-    if(window.lenis) window.lenis.scrollTo(el,{offset:-90}); else el.scrollIntoView({behavior:'smooth'});
+    if(window.lenis){ window.lenis.scrollTo(el,{offset:-90}); return; }
+    // Instant positional scroll — the only form that reliably moves the page on
+    // mobile Safari ({behavior:'smooth'} and rAF are flaky there).
+    const target = Math.max(0, el.getBoundingClientRect().top + (window.scrollY||window.pageYOffset||0) - 84);
+    window.scrollTo(0, target);
   }
   rail.addEventListener('click',e=>{const b=e.target.closest('[data-cat]'); if(b) goto(b.dataset.cat);});
   pills.addEventListener('click',e=>{const b=e.target.closest('[data-cat]'); if(b) goto(b.dataset.cat);});
 
-  let io;
   function setupScrollspy(){
     if(io) io.disconnect();
     io=new IntersectionObserver(entries=>{
