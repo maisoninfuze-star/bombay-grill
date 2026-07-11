@@ -212,6 +212,16 @@
     const sub=subtotal(), tax=sub*TAX;
     const lines=cart.map(i=>`${i.qty} x ${i.name} - ${money(i.qty*i.price)}`).join('\n');
     const msg=`Bombay Grill - PICKUP order\n\n${lines}\n\nSubtotal ${money(sub)}\nTax ${money(tax)}\nTotal ${money(sub+tax)}`;
+    // Log the order to the local orders dashboard (prototype store) before handing off.
+    try{
+      const OKEY='bg_orders_v1';
+      const list=JSON.parse(localStorage.getItem(OKEY))||[];
+      const id='BG-'+String(2048+list.length);
+      list.push({id, ts:Date.now(), name:'Online order', phone:'',
+        type:'Pickup', items:cart.map(i=>({name:i.name, qty:i.qty, price:i.price})),
+        subtotal:sub, tax, total:sub+tax, status:'new'});
+      localStorage.setItem(OKEY, JSON.stringify(list));
+    }catch{}
     // No backend yet: open the SMS app to the restaurant with the order pre-filled.
     // iOS uses '&body=', Android uses '?body='; body must be URL-encoded.
     const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);

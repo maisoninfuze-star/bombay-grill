@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders Dashboard — Bombay Grill &amp; Sweets</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css?v=8">
+</head>
+<body class="dash">
+
+<header class="d-head">
+  <a href="index.html" class="logo">Bombay Grill<small>&amp; Sweets · Staff</small></a>
+  <div class="d-head__actions">
+    <span class="d-live"><i></i> Live</span>
+    <button class="d-btn d-ghost" id="d-refresh">Refresh</button>
+    <button class="d-btn d-ghost" id="d-clear">Reset demo</button>
+  </div>
+</header>
+
+<main class="d-wrap">
+  <div class="d-title">
+    <h1>Orders</h1>
+    <p>Live pickup orders. New orders placed on the site appear here. <b>Prototype</b> — a shared backend (Snappy) will sync orders across all devices.</p>
+  </div>
+
+  <section class="d-stats">
+    <div class="d-stat"><span class="d-stat__k">Orders today</span><span class="d-stat__v" id="s-orders">0</span></div>
+    <div class="d-stat"><span class="d-stat__k">Revenue today</span><span class="d-stat__v" id="s-revenue">$0.00</span></div>
+    <div class="d-stat"><span class="d-stat__k">In progress</span><span class="d-stat__v" id="s-pending">0</span></div>
+    <div class="d-stat d-stat--hot"><span class="d-stat__k">Ready for pickup</span><span class="d-stat__v" id="s-ready">0</span></div>
+    <div class="d-stat"><span class="d-stat__k">Avg. order</span><span class="d-stat__v" id="s-avg">$0.00</span></div>
+  </section>
+
+  <nav class="d-tabs">
+    <button class="d-tab active" data-f="active">Active <span class="c">0</span></button>
+    <button class="d-tab" data-f="new">New <span class="c">0</span></button>
+    <button class="d-tab" data-f="preparing">Preparing <span class="c">0</span></button>
+    <button class="d-tab" data-f="ready">Ready <span class="c">0</span></button>
+    <button class="d-tab" data-f="completed">Completed <span class="c">0</span></button>
+    <button class="d-tab" data-f="all">All <span class="c">0</span></button>
+  </nav>
+
+  <section class="d-grid" id="d-orders"></section>
+</main>
+
+<script src="assets/js/dashboard.js?v=1"></script>
+</body>
+</html>
