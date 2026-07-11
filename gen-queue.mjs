@@ -8,20 +8,19 @@ const sh = promisify(execFile);
 const KEY = process.env.FAL_KEY;
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const FULL = path.join(DIR,'assets/photos/full'), THUMB = path.join(DIR,'assets/photos/thumb');
-const MODEL = 'fal-ai/nano-banana/edit';
 const H = { Authorization:`Key ${KEY}`, 'Content-Type':'application/json' };
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
 
-const HUMAN=' Real authentic restaurant photograph on a warm wooden table, bright natural light, natural plating, realistic textures, appetizing, NOT waxy/plastic/AI-perfect.';
+// Text-to-image (no brown-curry reference) so the gravy colour is right.
 const jobs=[
- {slug:'shahi-paneer', ref:'lamb-rogan-josh', p:'Shahi paneer in a copper karahi: many soft CLEARLY WHITE paneer (cottage cheese) cubes bathed in a smooth, rich, MILD PALE creamy pinkish-orange tomato-cashew gravy (light and creamy, NOT dark brown), a swirl of cream, slivers of ginger and coriander. The white paneer cubes must be obvious against the pale gravy.'},
- {slug:'goat-karahi', ref:'lamb-rogan-josh', p:'Baby goat karahi in a copper karahi: several CHUNKY BONE-IN pieces of goat meat clearly visible in a thick reddish-brown bhuna karahi masala of tomato and onion, glossy oil on top, julienned ginger, green chili and coriander. Distinct meat chunks visible (not a smooth paste).'},
+ {slug:'shahi-paneer', model:'fal-ai/nano-banana', p:'Professional Indian restaurant food photograph on a warm dark-wood table with bright natural light, shallow depth of field. Shahi Paneer served in a shiny copper karahi bowl with brass handles: soft PURE-WHITE cubes of paneer (Indian cottage cheese) clearly visible and standing out, in a smooth glossy RICH CREAMY PALE-GOLDEN ivory Mughlai gravy (cashew-and-cream based, warm creamy off-white to light golden colour — appetizing and luxurious, absolutely NOT brown, muddy, grey or dark), finished with an elegant swirl of fresh cream, a scatter of slivered almonds and pistachios, a few saffron strands and fresh coriander. Realistic, natural, mouth-watering.'},
 ];
 
 async function gen(j){
-  const ref='data:image/jpeg;base64,'+(await readFile(path.join(THUMB,j.ref+'.jpg'))).toString('base64');
-  const body={ prompt:'Professional but natural Indian restaurant food photograph. '+j.p+HUMAN, image_urls:[ref], num_images:1, output_format:'jpeg' };
-  const sub=await fetch(`https://queue.fal.run/${MODEL}`,{method:'POST',headers:H,body:JSON.stringify(body)});
+  const model = j.model || 'fal-ai/nano-banana/edit';
+  const body = { prompt:j.p, num_images:1, output_format:'jpeg' };
+  if(j.ref){ body.image_urls=['data:image/jpeg;base64,'+(await readFile(path.join(THUMB,j.ref+'.jpg'))).toString('base64')]; }
+  const sub=await fetch(`https://queue.fal.run/${model}`,{method:'POST',headers:H,body:JSON.stringify(body)});
   if(!sub.ok){ console.log('SUBMIT FAIL',j.slug,sub.status,(await sub.text()).slice(0,120)); return; }
   const { status_url, response_url } = await sub.json();
   for(let i=0;i<90;i++){
