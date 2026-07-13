@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu &amp; Photos — Bombay Grill Staff</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css?v=9">
+</head>
+<body class="dash">
+
+<!-- login -->
+<div id="login" class="a-login" style="display:none">
+  <form id="login-form" class="a-login__card">
+    <div class="logo">Bombay Grill<small>&amp; Sweets · Staff</small></div>
+    <h1>Menu &amp; Photos</h1>
+    <p>Enter the staff password to edit prices and photos.</p>
+    <input id="pw" type="password" placeholder="Admin password" autocomplete="current-password" required>
+    <button type="submit" class="d-btn d-adv">Sign in</button>
+    <p class="a-login__note">Changes you publish here go live on the website for all customers.</p>
+  </form>
+</div>
+
+<!-- app -->
+<div id="app" style="display:none">
+  <header class="d-head a-head">
+    <a href="index.html" class="logo">Bombay Grill<small>&amp; Sweets · Staff</small></a>
+    <div class="d-head__actions">
+      <button class="d-btn d-ghost" id="discard-btn" style="display:none">Discard</button>
+      <button class="d-btn d-adv" id="publish-btn" disabled>Nothing to publish</button>
+      <button class="d-btn d-ghost" id="logout-btn">Log out</button>
+    </div>
+  </header>
+
+  <div id="status" class="a-status" style="display:none"></div>
+
+  <main class="d-wrap a-wrap">
+    <div class="d-title">
+      <h1>Menu &amp; Photos</h1>
+      <p>Update prices, hide sold-out dishes, and replace any photo. Click <b>Publish</b> and it goes live for customers in about a minute.</p>
+    </div>
+
+    <nav class="d-tabs a-tabs">
+      <button class="d-tab active" id="tab-menu">Menu items</button>
+      <button class="d-tab" id="tab-site">Site photos</button>
+      <button class="d-tab" id="tab-help">Help</button>
+    </nav>
+
+    <div class="a-toolbar" id="menu-toolbar">
+      <input id="search" type="search" placeholder="Search dishes…" class="a-search">
+    </div>
+
+    <section id="pane-menu"></section>
+    <section id="pane-site" style="display:none"></section>
+    <section id="pane-help" style="display:none" class="a-help">
+      <h2>How it works</h2>
+      <ul>
+        <li><b>Price</b> — type a new price; it updates on the online-order page.</li>
+        <li><b>Type</b> — mark a dish Veg or Non-veg (changes the dot on the menu).</li>
+        <li><b>Available</b> — turn a dish off to hide it from customers (e.g. sold out). Turn it back on anytime.</li>
+        <li><b>Replace</b> — upload a new photo for a dish. It’s resized automatically and updates everywhere that dish appears.</li>
+        <li><b>Site photos</b> — replace non-dish images like the home-page hero.</li>
+        <li><b>Publish</b> — saves everything and pushes it live. Customers see changes in ~1 minute (a browser refresh may be needed).</li>
+      </ul>
+      <p class="a-hint">Nothing is live until you press Publish. You can make several edits and publish them together.</p>
+    </section>
+  </main>
+</div>
+
+<script src="assets/js/menu-data.js?v=9"></script>
+<script src="assets/js/photo-manifest.js?v=9"></script>
+<script src="assets/js/admin.js?v=1"></script>
+</body>
+</html>

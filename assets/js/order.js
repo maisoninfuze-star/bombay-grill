@@ -3,7 +3,9 @@
 (function(){
   const $ = (s,r=document)=>r.querySelector(s);
   const money = n => '$'+n.toFixed(2);
-  const THUMB = slug => `assets/photos/thumb/${slug}.jpg`;
+  // Live overrides published from the staff dashboard (prices / availability / photo versions).
+  let OV = { items:{}, photos:{} };
+  const THUMB = slug => `assets/photos/thumb/${slug}.jpg` + (OV.photos && OV.photos[slug] ? `?v=${OV.photos[slug]}` : '');
   // generated/extra photos mapped by item name (so menu-data stays clean)
   const ITEM_PHOTOS = {
     "Chicken Korma":"chicken-korma","Lamb Korma":"lamb-korma","Chicken Vindaloo":"chicken-vindaloo",
@@ -23,6 +25,23 @@
     const s = slugify(it.n);
     return HAVE.has(s) ? s : '';                    // auto-match generated photos
   };
+  // ---- live overrides (dashboard) ----
+  const ovKey = (catId, name) => catId + ':' + slugify(name);
+  function applyOverrides(){
+    MENU_CATEGORIES.forEach(cat => cat.items.forEach(it => {
+      const o = OV.items && OV.items[ovKey(cat.id, it.n)];
+      if(!o){ it._hidden = false; return; }
+      if(typeof o.price === 'number') it.p = o.price;
+      if(typeof o.veg === 'number') it.v = o.veg;
+      it._hidden = !!o.hidden;
+    }));
+  }
+  async function loadOverrides(){
+    try{
+      const r = await fetch('assets/data/overrides.json?_='+Date.now(), {cache:'no-store'});
+      if(r.ok){ const j = await r.json(); OV = { items:j.items||{}, photos:j.photos||{} }; applyOverrides(); }
+    }catch(_){}
+  }
   const TAX = 0.14975; // QC GST+QST
   const KEY = 'bg_cart_v1';
 
@@ -69,15 +88,18 @@
   function buildMenu(){
     root.innerHTML=''; rail.innerHTML=''; pills.innerHTML='';
     MENU_CATEGORIES.forEach(cat=>{
+      const visible=cat.items.filter(x=>!x._hidden);
+      if(!visible.length) return;
       rail.insertAdjacentHTML('beforeend',
-        `<button class="cat-link" data-cat="${cat.id}"><span>${catName(cat)}</span><span class="c">${cat.items.length}</span></button>`);
+        `<button class="cat-link" data-cat="${cat.id}"><span>${catName(cat)}</span><span class="c">${visible.length}</span></button>`);
       pills.insertAdjacentHTML('beforeend',
         `<button class="cat-pill" data-cat="${cat.id}">${catName(cat)}</button>`);
       const grp=document.createElement('section');
       grp.className='menu-group'; grp.id='cat-'+cat.id;
-      grp.innerHTML=`<div class="menu-group__head"><h2>${catName(cat)}</h2><span class="fr">${catSub(cat)}</span><span class="ct">${cat.items.length} ${t('items')}</span></div><div class="item-grid"></div>`;
+      grp.innerHTML=`<div class="menu-group__head"><h2>${catName(cat)}</h2><span class="fr">${catSub(cat)}</span><span class="ct">${visible.length} ${t('items')}</span></div><div class="item-grid"></div>`;
       const grid=grp.querySelector('.item-grid');
       cat.items.forEach((it,idx)=>{
+        if(it._hidden) return;
         const key=cat.id+':'+idx;
         const pic=photoOf(it);
         const media = pic
@@ -160,7 +182,8 @@
   });
 
   function renderAll(){ renderControls(); renderCart(); }
-  buildMenu(); renderAll();
+  // load published overrides first, then build (falls back to defaults if unavailable)
+  loadOverrides().finally(()=>{ buildMenu(); renderAll(); });
   // re-render when language toggles
   window.addEventListener('bg:lang', e=>{ LANG=e.detail||'en'; buildMenu(); renderAll(); });
 
