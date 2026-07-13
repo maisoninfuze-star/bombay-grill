@@ -73,8 +73,10 @@
   // ---- language ----
   let LANG = window.BG_LANG || 'en';
   const T = {
-    en:{items:'items', add:'Add', empty1:'Your bag is empty.', empty2:'Add some dishes to get started.', veg:'Vegetarian', nv:'Non-vegetarian'},
-    fr:{items:'articles', add:'Ajouter', empty1:'Votre panier est vide.', empty2:'Ajoutez des plats pour commencer.', veg:'Végétarien', nv:'Non végétarien'}
+    en:{items:'items', add:'Add', empty1:'Your bag is empty.', empty2:'Add some dishes to get started.', veg:'Vegetarian', nv:'Non-vegetarian',
+        err_name:'Please add your name.', err_phone:'Please add a valid phone number.', placing:'Placing order…'},
+    fr:{items:'articles', add:'Ajouter', empty1:'Votre panier est vide.', empty2:'Ajoutez des plats pour commencer.', veg:'Végétarien', nv:'Non végétarien',
+        err_name:'Veuillez indiquer votre nom.', err_phone:'Veuillez indiquer un numéro valide.', placing:'Envoi…'}
   };
   const t = k => (T[LANG]||T.en)[k];
   const primary   = it => LANG==='fr' ? it.f : it.n;
@@ -187,13 +189,9 @@
   // re-render when language toggles
   window.addEventListener('bg:lang', e=>{ LANG=e.detail||'en'; buildMenu(); renderAll(); });
 
-  // ---- order type segment ----
-  document.querySelectorAll('.seg button:not([disabled])').forEach(b=>{
-    b.addEventListener('click',()=>{
-      document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-    });
-  });
+  // ---- order type segment ---- (Pickup is the in-site flow; Delivery hands off to Uber Eats)
+  const segPickup=$('#seg-pickup');
+  if(segPickup) segPickup.addEventListener('click',()=>{ segPickup.classList.add('active'); const d=$('#seg-delivery'); if(d) d.classList.remove('active'); });
 
   // ---- category nav: click + scrollspy ----
   function stickyOffset(){
@@ -229,25 +227,57 @@
     document.querySelectorAll('.menu-group').forEach(g=>io.observe(g));
   }
 
+  // ---- delivery → Uber Eats ----
+  const UBER_URL = 'https://www.ubereats.com/ca/store/bombay-grill-&-sweets/I2TUV_-5VfiqRWkUwV_stA';
+  const del=$('#seg-delivery');
+  if(del) del.addEventListener('click',()=>{ window.open(UBER_URL,'_blank','noopener'); });
+
   // ---- checkout (pickup) ----
-  $('#checkout-btn').addEventListener('click',()=>{
+  const errEl=$('#checkout-err'), nameEl=$('#c-name'), phoneEl=$('#c-phone'), btn=$('#checkout-btn');
+  function showErr(m){ if(!errEl) return; errEl.textContent=m; errEl.hidden=false; }
+  function clearErr(){ if(errEl) errEl.hidden=true; }
+  [nameEl,phoneEl].forEach(el=>el&&el.addEventListener('input',clearErr));
+
+  function localLog(order){
+    try{ const K='bg_orders_v1'; const list=JSON.parse(localStorage.getItem(K))||[]; list.push(order); localStorage.setItem(K, JSON.stringify(list)); }catch{}
+  }
+  function smsFallback(order){
+    const lines=order.items.map(i=>`${i.qty} x ${i.name} - ${money(i.qty*i.price)}`).join('\n');
+    const msg=`Bombay Grill - PICKUP order ${order.id}\n${order.name}${order.phone?' / '+order.phone:''}\n\n${lines}\n\nTotal ${money(order.total)}`;
+    const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent);
+    window.location.href=`sms:+15144213522${isIOS?'&':'?'}body=${encodeURIComponent(msg)}`;
+  }
+  function confirmView(id, texted){
+    cart=[]; save(); renderAll(); closeCart();
+    const oc=$('#order-confirm'); if(!oc){ alert('Order placed: '+id); return; }
+    $('#oc-id').textContent='#'+id;
+    const sms=$('#oc-sms'); if(sms) sms.hidden=!texted;
+    oc.hidden=false;
+  }
+
+  btn && btn.addEventListener('click', async ()=>{
     if(!cart.length) return;
+    const name=(nameEl&&nameEl.value.trim())||'';
+    const phone=(phoneEl&&phoneEl.value.trim())||'';
+    if(!name){ showErr(t('err_name')); nameEl&&nameEl.focus(); return; }
+    if(phone.replace(/\D/g,'').length<10){ showErr(t('err_phone')); phoneEl&&phoneEl.focus(); return; }
+    clearErr();
     const sub=subtotal(), tax=sub*TAX;
-    const lines=cart.map(i=>`${i.qty} x ${i.name} - ${money(i.qty*i.price)}`).join('\n');
-    const msg=`Bombay Grill - PICKUP order\n\n${lines}\n\nSubtotal ${money(sub)}\nTax ${money(tax)}\nTotal ${money(sub+tax)}`;
-    // Log the order to the local orders dashboard (prototype store) before handing off.
+    const items=cart.map(i=>({name:i.name, qty:i.qty, price:i.price}));
+    const payload={ name, phone, type:'Pickup', items };
+    btn.disabled=true; const label=btn.querySelector('span'); const old=label?label.textContent:''; if(label) label.textContent=t('placing');
     try{
-      const OKEY='bg_orders_v1';
-      const list=JSON.parse(localStorage.getItem(OKEY))||[];
-      const id='BG-'+String(2048+list.length);
-      list.push({id, ts:Date.now(), name:'Online order', phone:'',
-        type:'Pickup', items:cart.map(i=>({name:i.name, qty:i.qty, price:i.price})),
-        subtotal:sub, tax, total:sub+tax, status:'new'});
-      localStorage.setItem(OKEY, JSON.stringify(list));
-    }catch{}
-    // No backend yet: open the SMS app to the restaurant with the order pre-filled.
-    // iOS uses '&body=', Android uses '?body='; body must be URL-encoded.
-    const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
-    window.location.href = `sms:+15144213522${isIOS?'&':'?'}body=${encodeURIComponent(msg)}`;
+      const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      if(r.ok){ const j=await r.json(); confirmView(j.id, false); }
+      else { throw new Error('backend '+r.status); } // 501 not configured, etc → fallback
+    }catch(_){
+      // No backend (yet) or offline: log locally + text the restaurant so the order still lands.
+      const id='BG-'+String(2048+((JSON.parse(localStorage.getItem('bg_orders_v1')||'[]')).length));
+      const order={ id, ts:Date.now(), name, phone, type:'Pickup', items, subtotal:sub, tax, total:sub+tax, status:'new' };
+      localLog(order);
+      confirmView(id, true);
+      setTimeout(()=>smsFallback(order), 400);
+    }finally{ btn.disabled=false; if(label) label.textContent=old; }
   });
+  const ocClose=$('#oc-close'); if(ocClose) ocClose.addEventListener('click',()=>{ $('#order-confirm').hidden=true; });
 })();

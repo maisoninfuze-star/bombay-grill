@@ -7,23 +7,25 @@
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=8">
+<link rel="stylesheet" href="assets/css/style.css?v=9">
 </head>
 <body class="dash">
 
+<div id="d-app">
 <header class="d-head">
   <a href="index.html" class="logo">Bombay Grill<small>&amp; Sweets · Staff</small></a>
   <div class="d-head__actions">
-    <span class="d-live"><i></i> Live</span>
+    <span class="d-conn local" id="d-conn">…</span>
     <button class="d-btn d-ghost" id="d-refresh">Refresh</button>
     <button class="d-btn d-ghost" id="d-clear">Reset demo</button>
+    <a class="d-btn d-ghost" href="admin.html">Menu &amp; photos</a>
   </div>
 </header>
 
 <main class="d-wrap">
   <div class="d-title">
     <h1>Orders</h1>
-    <p>Live pickup orders. New orders placed on the site appear here. <b>Prototype</b> — a shared backend (Snappy) will sync orders across all devices.</p>
+    <p>Live pickup orders placed on the website. A new order chimes and appears here automatically. Advance each order through <b>New → Preparing → Ready → Completed</b>.</p>
   </div>
 
   <section class="d-stats">
@@ -45,7 +47,8 @@
 
   <section class="d-grid" id="d-orders"></section>
 </main>
+</div>
 
-<script src="assets/js/dashboard.js?v=1"></script>
+<script src="assets/js/dashboard.js?v=2"></script>
 </body>
 </html>
